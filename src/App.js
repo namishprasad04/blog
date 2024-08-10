@@ -216,7 +216,7 @@ function Archive() {
 }
 
 function Footer() {
-  return <footer>&copy; by The Atomic Blog ✌️</footer>;
+  return <footer>&copy; by The Quick Blog ✌️</footer>;
 }
 
 export default App;

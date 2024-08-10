@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 
 function createRandomPost() {
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
     body: faker.hacker.phrase(),
   };
