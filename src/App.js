@@ -23,7 +23,7 @@ function App() {
     <section>
       <button
         onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
-        className="btn-fake-dark-mode"
+        className="btn-fake-dark-mode fixed bottom-5 right-4 z-10 p-4 md:p-3"
       >
         {isFakeDark ? "☀️" : "🌙"}
       </button>
@@ -42,13 +42,13 @@ function Header() {
   const { onClearPosts } = usePosts();
   return (
     <header>
-      <h1>
-        <span>⚛️</span>The Atomic Blog
-      </h1>
-      <div>
+      <h1 className="text-md md:text-3xl">Quick Blog</h1>
+      <div className="">
         <Results />
         <SearchPosts />
-        <button onClick={onClearPosts}>Clear posts</button>
+        <button className="hidden md:flex" onClick={onClearPosts}>
+          Clear posts
+        </button>
       </div>
     </header>
   );
@@ -58,6 +58,7 @@ function SearchPosts() {
   const { searchQuery, setSearchQuery } = usePosts();
   return (
     <input
+      className="w-[8rem] md:w-[12rem] text-sm md:text-md py-2 px-3"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       placeholder="Search posts..."
@@ -67,7 +68,7 @@ function SearchPosts() {
 
 function Results() {
   const { posts } = usePosts();
-  return <p>🚀 {posts.length} atomic posts found</p>;
+  return <p className="text-sm">🚀 {posts.length} posts found</p>;
 }
 
 const Main = memo(function Main() {
@@ -101,13 +102,15 @@ function FormAddPost() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row">
       <input
+      className="p-3"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Post title"
       />
       <textarea
+      className="p-2"
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Post body"
@@ -121,12 +124,18 @@ function List() {
   const { posts } = usePosts();
   return (
     <>
-      <ul>
+      <ul className="grid md:grid-cols-3 lg:grid-cols-4 ">
         {posts.map((post, i) => (
-          <li key={i}>
-            <h3>{post.title}</h3>
-            <p>{post.body}</p>
-          </li>
+          <div key={i} className="border border-[#ffe8cc] relative h-[170px] md:h-[200px]">
+            <li className="p-5">
+              <h3>{post.title}</h3>
+              <p>{post.body}</p>
+            </li>
+            <div className="flex gap-5 absolute bottom-4 left-5 md:left-8">
+              <button>Edit</button>
+              <button>Delete</button>
+            </div>
+          </div>
         ))}
       </ul>
     </>
