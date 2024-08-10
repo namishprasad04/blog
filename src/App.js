@@ -121,20 +121,60 @@ function FormAddPost() {
 }
 
 function List() {
-  const { posts } = usePosts();
+  const { posts, onDeletePost, onEditPost } = usePosts();
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
+
+  const handleEdit = (post) => {
+    setEditingId(post.id);
+    setEditTitle(post.title);
+    setEditBody(post.body);
+  };
+
+  const handleSave = () => {
+    onEditPost(editingId, { title: editTitle, body: editBody });
+    setEditingId(null);
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+  };
+
   return (
     <>
-      <ul className="grid md:grid-cols-3 lg:grid-cols-4 ">
-        {posts.map((post, i) => (
-          <div key={i} className="border border-[#ffe8cc] relative h-[170px] md:h-[200px]">
+      <ul className="grid md:grid-cols-3 lg:grid-cols-4">
+        {posts.map((post) => (
+          <div key={post.id} className="border border-[#ffe8cc] relative h-[170px] md:h-[200px] hover:bg-[#fff4e6] ">
             <li className="p-5">
-              <h3>{post.title}</h3>
-              <p>{post.body}</p>
+              {editingId === post.id ? (
+                <>
+                  <input
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    className="w-full mb-2 p-1"
+                  />
+                  <textarea
+                    value={editBody}
+                    onChange={(e) => setEditBody(e.target.value)}
+                    className="w-full mb-2 p-1"
+                  />
+                  <div className="flex gap-2">
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={handleCancel}>Cancel</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3>{post.title}</h3>
+                  <p>{post.body}</p>
+                  <div className="flex gap-5 absolute bottom-4 left-5 md:left-8">
+                    <button onClick={() => handleEdit(post)}>Edit</button>
+                    <button onClick={() => onDeletePost(post.id)}>Delete</button>
+                  </div>
+                </>
+              )}
             </li>
-            <div className="flex gap-5 absolute bottom-4 left-5 md:left-8">
-              <button>Edit</button>
-              <button>Delete</button>
-            </div>
           </div>
         ))}
       </ul>
@@ -160,13 +200,13 @@ function Archive() {
       </button>
 
       {showArchive && (
-        <ul>
+        <ul className="flex flex-col">
           {posts.map((post, i) => (
-            <li key={i}>
-              <p>
+            <li key={i} className="flex flex-col md:flex-row md:justify-between md:items-center p-5 md:p-2">
+              <p className="mb-5 md:mb-0">
                 <strong>{post.title}:</strong> {post.body}
               </p>
-              <button onClick={() => onAddPost(post)}>Add as new post</button>
+              <button className="w-[140px]" onClick={() => onAddPost(post)}>Add as new post</button>
             </li>
           ))}
         </ul>

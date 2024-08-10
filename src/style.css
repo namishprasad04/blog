@@ -156,24 +156,24 @@ main ul {
   padding: 16px 20px;
 } */
 
-main li:hover {
+/* main li:hover {
   background-color: #fff4e6;
-}
+} */
 
 aside ul {
   font-size: 90%;
   list-style: none;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   gap: 2px;
 }
 
 aside li {
   border: 1px solid #ffe8cc;
   padding: 4px 8px;
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; */
 }
 
 h2 + button {

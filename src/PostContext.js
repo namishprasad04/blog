@@ -3,6 +3,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 
 function createRandomPost() {
   return {
+    id: faker.datatype.uuid(),
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
     body: faker.hacker.phrase(),
   };
@@ -16,6 +17,7 @@ function PostProvider({ children }) {
     Array.from({ length: 30 }, () => createRandomPost())
   );
   const [searchQuery, setSearchQuery] = useState("");
+  
   // Derived state. These are the posts that will actually be displayed
   const searchedPosts =
     searchQuery.length > 0
@@ -27,11 +29,23 @@ function PostProvider({ children }) {
       : posts;
 
   function handleAddPost(post) {
-    setPosts((posts) => [post, ...posts]);
+    setPosts((posts) => [{ ...post, id: faker.datatype.uuid() }, ...posts]);
   }
 
   function handleClearPosts() {
     setPosts([]);
+  }
+
+  function handleDeletePost(id) {
+    setPosts((posts) => posts.filter((post) => post.id !== id));
+  }
+
+  function handleEditPost(id, updatedPost) {
+    setPosts((posts) =>
+      posts.map((post) =>
+        post.id === id ? { ...post, ...updatedPost } : post
+      )
+    );
   }
 
   const value = useMemo(() => {
@@ -39,15 +53,15 @@ function PostProvider({ children }) {
       posts: searchedPosts,
       onAddPost: handleAddPost,
       onClearPosts: handleClearPosts,
+      onDeletePost: handleDeletePost,
+      onEditPost: handleEditPost,
       searchQuery,
       setSearchQuery,
     };
-  },[searchQuery,searchedPosts]);
+  }, [searchQuery, searchedPosts]);
 
   return (
-    <PostContext.Provider
-      value={value}
-    >
+    <PostContext.Provider value={value}>
       {children}
     </PostContext.Provider>
   );
@@ -55,7 +69,7 @@ function PostProvider({ children }) {
 
 function usePosts() {
   const context = useContext(PostContext);
-  if (context === "undefined")
+  if (context === undefined)
     throw new Error("PostContext was used outside of the PostProvider");
 
   return context;
